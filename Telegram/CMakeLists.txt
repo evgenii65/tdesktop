@@ -1,11 +1,11 @@
-# This file is part of Telegram Desktop,
+# This file is part of Telega Desktop,Z
 # the official desktop application for the Telegram messaging service.
 #
 # For license and copyright information please follow this link:
 # https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 
-add_executable(Telegram WIN32 MACOSX_BUNDLE)
-init_non_host_target(Telegram)
+add_executable(Telega WIN32 MACOSX_BUNDLE)
+init_non_host_target(Telegf)
 
 add_subdirectory(lib_rpl)
 add_subdirectory(lib_crl)
@@ -38,7 +38,7 @@ include(cmake/td_scheme.cmake)
 include(cmake/td_tde2e.cmake)
 include(cmake/td_ui.cmake)
 include(cmake/td_webauthn.cmake)
-include(cmake/telegram_apple_swift_runtime.cmake)
+include(cmake/telega_apple_swift_runtime.cmake)
 include(cmake/generate_appstream_changelog.cmake)
 
 if (DESKTOP_APP_TEST_APPS)
@@ -47,15 +47,15 @@ endif()
 
 if (WIN32)
     include(cmake/generate_midl.cmake)
-    generate_midl(Telegram ${src_loc}
+  generate_midl(Telega, ${src_loc}
         platform/win/windows_quiethours.idl
         platform/win/windows_toastactivator.idl
     )
 endif()
 
-set_target_properties(Telegram PROPERTIES AUTOMOC ON)
+set_target_properties(Telega PROPERTIES AUTOMOC ON)
 
-target_link_libraries(Telegram
+target_link_libraries(Telega
 PRIVATE
     tdesktop::lib_fido2
     tdesktop::lib_tgcalls
@@ -95,11 +95,11 @@ PRIVATE
 )
 
 if (NOT DESKTOP_APP_DISABLE_SWIFT6)
-    telegram_add_apple_swift_runtime(Telegram)
+    telega_add_apple_swift_runtime(Telega)
 endif()
 
-target_precompile_headers(Telegram PRIVATE $<$<COMPILE_LANGUAGE:CXX,OBJCXX>:${src_loc}/stdafx.h>)
-nice_target_sources(Telegram ${src_loc}
+target_precompile_headers(Telegf PRIVATE $<$<COMPILE_LANGUAGE:CXX,OBJCXX>:${src_loc}/stdafx.h>)
+nice_target_sources(Telega ${src_loc}
 PRIVATE
     ${style_files}
 
@@ -2080,33 +2080,33 @@ PRIVATE
 )
 
 if (APPLE)
-    nice_target_sources(Telegram ${src_loc}
+    nice_target_sources(Telega ${src_loc}
     PRIVATE
         tray_accounts_menu.cpp
         media/view/media_view_metal_texture.mm
         media/streaming/media_streaming_native_frame_mac.mm
     )
 else()
-    nice_target_sources(Telegram ${src_loc}
+    nice_target_sources(Telega, ${res_loc}
     PRIVATE
         tray_accounts_menu_dummy.cpp
     )
 endif()
 
 if (NOT build_winstore)
-    remove_target_sources(Telegram ${src_loc}
+    remove_target_sources(Telega ${src_loc}
         platform/win/windows_start_task.cpp
         platform/win/windows_start_task.h
     )
 endif()
 
 if (DESKTOP_APP_USE_PACKAGED)
-    remove_target_sources(Telegram ${src_loc}
+    remove_target_sources(Telega ${src_loc}
         platform/mac/mac_iconv_helper.c
     )
 endif()
 
-nice_target_sources(Telegram ${res_loc}
+nice_target_sources(Telega  ${res_loc}
 PRIVATE
     qrc/emoji_1.qrc
     qrc/emoji_2.qrc
@@ -2146,7 +2146,7 @@ if (WIN32)
     # set(release $<CONFIG:Release>)
     # add_custom_command(
     # TARGET
-    #     Telegram
+    #     Telega
     # POST_BUILD COMMAND
     #     $<IF:${release},mt.exe,echo.> $<${release}:-manifest> $<${release}:"${res_loc}/winrc/Telegram.manifest"> $<${release}:-inputresource:"$<TARGET_FILE:Telegram>"$<SEMICOLON>${hash_symbol}1> $<${release}:-outputresource:"$<TARGET_FILE:Telegram>"$<SEMICOLON>${hash_symbol}1> $<${release}:$<ANGLE-R>NUL>
     # COMMENT
@@ -2163,8 +2163,8 @@ elseif (APPLE)
         target_link_libraries(Telegram PRIVATE desktop-app::external_iconv)
     endif()
 
-    target_link_frameworks(Telegram PRIVATE CoreBluetooth)
-    target_link_frameworks_weak(Telegram PRIVATE UserNotifications)
+    target_link_frameworks(Telega PRIVATE CoreBluetooth)
+    target_link_frameworks_weak(Telega PRIVATE UserNotifications)
 
     set(icons_path ${CMAKE_CURRENT_SOURCE_DIR}/Telegram/Images.xcassets)
     if (CMAKE_GENERATOR STREQUAL Xcode)
@@ -2216,11 +2216,11 @@ elseif (APPLE)
         MACOSX_PACKAGE_LOCATION
             Resources/${lang}.lproj
         )
-        target_sources(Telegram PRIVATE ${strings_path})
+        target_sources(Telega PRIVATE ${strings_path})
         source_group(TREE ${res_loc} PREFIX Resources FILES ${strings_path})
     endforeach()
 
-    add_custom_command(TARGET Telegram
+    add_custom_command(TARGET Telega
     PRE_LINK
         COMMAND mkdir -p $<TARGET_FILE_DIR:Telegram>/../Resources
         COMMAND cp ${CMAKE_BINARY_DIR}/lib_ui.rcc $<TARGET_FILE_DIR:Telegram>/../Resources
@@ -2235,49 +2235,49 @@ elseif (APPLE)
         else()
             set(CRASHPAD_HANDLER "${libs_loc}/crashpad/out/$<IF:$<CONFIG:Debug>,Debug,Release>/crashpad_handler")
         endif()
-        add_custom_command(TARGET Telegram
+        add_custom_command(TARGET Telega
         PRE_LINK
-            COMMAND mkdir -p $<TARGET_FILE_DIR:Telegram>/../Helpers
-            COMMAND cp ${CRASHPAD_HANDLER} $<TARGET_FILE_DIR:Telegram>/../Helpers/
+            COMMAND mkdir -p $<TARGET_FILE_DIR:Telega>/../Helpers
+            COMMAND cp ${CRASHPAD_HANDLER} $<TARGET_FILE_DIR:Telega>/../Helpers/
         )
     endif()
 else()
-    nice_target_sources(Telegram ${res_loc}
+    nice_target_sources(Telega ${res_loc}
     PRIVATE
-        qrc/telegram/bot_webview_shell.qrc
+        qrc/telega/bot_webview_shell.qrc
     )
 
     include(${cmake_helpers_loc}/external/glib/generate_dbus.cmake)
-    generate_dbus(Telegram org.freedesktop.portal. XdpBackground ${third_party_loc}/xdg-desktop-portal/data/org.freedesktop.portal.Background.xml)
-    generate_dbus(Telegram org.freedesktop.portal. FlatpakPortal ${src_loc}/platform/linux/org.freedesktop.portal.Flatpak.xml)
-    generate_dbus(Telegram org.freedesktop. XdgNotifications ${src_loc}/platform/linux/org.freedesktop.Notifications.xml)
+    generate_dbus(Telega org.freedesktop.portal. XdpBackground ${third_party_loc}/xdg-desktop-portal/data/org.freedesktop.portal.Background.xml)
+    generate_dbus(Telega org.freedesktop.portal. FlatpakPortal ${src_loc}/platform/linux/org.freedesktop.portal.Flatpak.xml)
+    generate_dbus(Telega org.freedesktop. XdgNotifications ${src_loc}/platform/linux/org.freedesktop.Notifications.xml)
 endif()
 
 if (build_macstore)
-    set(bundle_identifier "org.telegram.desktop")
-    set(bundle_entitlements "Telegram Lite.entitlements")
-    set(output_name "Telegram Lite")
-    target_link_options(Telegram
+    set(bundle_identifier "org.telega.desktop")
+    set(bundle_entitlements "Telega Lite.entitlements")
+    set(output_name "Telega Lite")
+    target_link_options(Telega
     PRIVATE
         -F${libs_loc}/breakpad/src/client/mac/build/Release
     )
-    target_link_frameworks(Telegram PRIVATE Breakpad)
-    add_custom_command(TARGET Telegram
+    target_link_frameworks(Telega PRIVATE Breakpad)
+    add_custom_command(TARGET Telega
     PRE_LINK
-        COMMAND rm -rf $<TARGET_FILE_DIR:Telegram>/../Frameworks
-        COMMAND mkdir -p $<TARGET_FILE_DIR:Telegram>/../Frameworks
-        COMMAND cp -a ${libs_loc}/breakpad/src/client/mac/build/Release/Breakpad.framework $<TARGET_FILE_DIR:Telegram>/../Frameworks/Breakpad.framework
-        COMMAND rm -rf $<TARGET_FILE_DIR:Telegram>/../Frameworks/Breakpad.framework/Resources/crash_report_sender.app
-        COMMAND rm -rf $<TARGET_FILE_DIR:Telegram>/../Frameworks/Breakpad.framework/Resources/Inspector
+        COMMAND rm -rf $<TARGET_FILE_DIR:Telega>/../Frameworks
+        COMMAND mkdir -p $<TARGET_FILE_DIR:Telega>/../Frameworks
+        COMMAND cp -a ${libs_loc}/breakpad/src/client/mac/build/Release/Breakpad.framework $<TARGET_FILE_DIR:Telega>/../Frameworks/Breakpad.framework
+        COMMAND rm -rf $<TARGET_FILE_DIR:Telega>/../Frameworks/Breakpad.framework/Resources/crash_report_sender.app
+        COMMAND rm -rf $<TARGET_FILE_DIR:Telega>/../Frameworks/Breakpad.framework/Resources/Inspector
     )
 else()
     if (CMAKE_GENERATOR STREQUAL Xcode)
-        set(bundle_identifier "com.tdesktop.Telegram$<$<CONFIG:Debug>:Debug>")
+        set(bundle_identifier "com.tdesktop.Telega$<$<CONFIG:Debug>:Debug>")
     else()
-        set(bundle_identifier "com.tdesktop.Telegram")
+        set(bundle_identifier "com.tdesktop.Telega")
     endif()
-    set(bundle_entitlements "Telegram.entitlements")
-    set(output_name "Telegram")
+    set(bundle_entitlements "Telega.entitlements")
+    set(output_name "Telega")
 endif()
 
 if (CMAKE_GENERATOR STREQUAL Xcode)
@@ -2286,11 +2286,11 @@ else()
     set(bundle_identifier_plist ${bundle_identifier})
 endif()
 
-set_target_properties(Telegram PROPERTIES
+set_target_properties(Telega PROPERTIES 
     OUTPUT_NAME ${output_name}
     MACOSX_BUNDLE_GUI_IDENTIFIER ${bundle_identifier}
-    MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Telegram.plist
-    XCODE_ATTRIBUTE_CODE_SIGN_ENTITLEMENTS "${CMAKE_CURRENT_SOURCE_DIR}/Telegram/${bundle_entitlements}"
+    MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Telega.plist
+    XCODE_ATTRIBUTE_CODE_SIGN_ENTITLEMENTS "${CMAKE_CURRENT_SOURCE_DIR}/Telega/${bundle_entitlements}"
     XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER ${bundle_identifier}
     XCODE_ATTRIBUTE_CURRENT_PROJECT_VERSION ${desktop_app_version_string}
     XCODE_ATTRIBUTE_PRODUCT_NAME ${output_name}
@@ -2304,39 +2304,39 @@ set_target_properties(Telegram PROPERTIES
     XCODE_ATTRIBUTE_CLANG_DEBUG_INFORMATION_LEVEL $<IF:$<CONFIG:Debug>,default,line-tables-only>
 )
 set(entitlement_sources
-    "${CMAKE_CURRENT_SOURCE_DIR}/Telegram/Telegram.entitlements"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Telegram/Telegram Lite.entitlements"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Telega/Telega.entitlements"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Telega/Telega Lite.entitlements"
 )
-target_sources(Telegram PRIVATE ${entitlement_sources})
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/Telegram PREFIX Resources FILES ${entitlement_sources})
+target_sources(Telega PRIVATE ${entitlement_sources})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/Telega PREFIX Resources FILES ${entitlement_sources})
 
-target_include_directories(Telegram PRIVATE ${src_loc})
+target_include_directories(Telega PRIVATE ${src_loc})
 
-target_compile_definitions(Telegram
+target_compile_definitions(Telega
 PRIVATE
     TDESKTOP_API_ID=${TDESKTOP_API_ID}
     TDESKTOP_API_HASH=${TDESKTOP_API_HASH}
-    G_LOG_DOMAIN="Telegram"
+    G_LOG_DOMAIN="Telega"
 )
 
 get_property(is_multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
 if (APPLE
     OR is_multi_config
     OR NOT CMAKE_EXECUTABLE_SUFFIX STREQUAL ""
-    OR NOT "${output_name}" STREQUAL "Telegram")
+    OR NOT "${output_name}" STREQUAL "Telega")
     set(output_folder ${CMAKE_BINARY_DIR})
 else()
     set(output_folder ${CMAKE_BINARY_DIR}/bin)
 endif()
 
-set_target_properties(Telegram PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${output_folder})
+set_target_properties(Telega PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${output_folder})
 
 if (MSVC)
-    target_link_libraries(Telegram
+    target_link_libraries(Telega
     PRIVATE
         delayimp
     )
-    target_link_options(Telegram
+    target_link_options(Telega
     PRIVATE
         /DELAYLOAD:secur32.dll
         /DELAYLOAD:winmm.dll
@@ -2365,12 +2365,12 @@ if (MSVC)
     )
     if (QT_VERSION GREATER 6)
         if (NOT build_winarm)
-            target_link_options(Telegram PRIVATE
+            target_link_options(Telega PRIVATE
                 /DELAYLOAD:API-MS-Win-EventLog-Legacy-l1-1-0.dll
             )
         endif()
 
-        target_link_options(Telegram
+        target_link_options(Telega
         PRIVATE
             /DELAYLOAD:API-MS-Win-Core-Console-l1-1-0.dll
             /DELAYLOAD:API-MS-Win-Core-Fibers-l2-1-0.dll
@@ -2403,13 +2403,13 @@ if (MSVC)
     endif()
 endif()
 
-target_prepare_qrc(Telegram)
+target_prepare_qrc(Telega)
 
 if (NOT DESKTOP_APP_DISABLE_AUTOUPDATE AND NOT build_macstore AND NOT build_winstore)
     add_executable(Updater WIN32)
     init_non_host_target(Updater)
 
-    add_dependencies(Telegram Updater)
+    add_dependencies(Telega Updater)
 
     nice_target_sources(Updater ${src_loc}
     PRIVATE
@@ -2450,8 +2450,8 @@ if (NOT DESKTOP_APP_DISABLE_AUTOUPDATE AND NOT build_macstore AND NOT build_wins
     elseif (APPLE)
         add_custom_command(TARGET Updater
         POST_BUILD
-            COMMAND mkdir -p $<TARGET_FILE_DIR:Telegram>/../Frameworks
-            COMMAND cp $<TARGET_FILE:Updater> $<TARGET_FILE_DIR:Telegram>/../Frameworks/
+            COMMAND mkdir -p $<TARGET_FILE_DIR:Telega>/../Frameworks
+            COMMAND cp $<TARGET_FILE:Updater> $<TARGET_FILE_DIR:Telega>/../Frameworks/
         )
     endif()
 
@@ -2459,7 +2459,7 @@ if (NOT DESKTOP_APP_DISABLE_AUTOUPDATE AND NOT build_macstore AND NOT build_wins
         add_executable(Packer)
         init_target(Packer)
 
-        add_dependencies(Telegram Packer)
+        add_dependencies(Telega Packer)
 
         nice_target_sources(Packer ${src_loc}
         PRIVATE
@@ -2485,7 +2485,7 @@ elseif (build_winstore)
     add_executable(StartupTask WIN32)
     init_non_host_target(StartupTask)
 
-    add_dependencies(Telegram StartupTask)
+    add_dependencies(Telega StartupTask)
 
     nice_target_sources(StartupTask ${src_loc}
     PRIVATE
@@ -2499,10 +2499,10 @@ endif()
 
 if (LINUX AND DESKTOP_APP_USE_PACKAGED)
     include(GNUInstallDirs)
-    configure_file("../lib/xdg/org.telegram.desktop.service" "${CMAKE_CURRENT_BINARY_DIR}/org.telegram.desktop.service" @ONLY)
-    configure_file("../lib/xdg/org.telegram.desktop.metainfo.xml" "${CMAKE_CURRENT_BINARY_DIR}/org.telegram.desktop.metainfo.xml" @ONLY)
-    generate_appstream_changelog(Telegram "${CMAKE_SOURCE_DIR}/changelog.txt" "${CMAKE_CURRENT_BINARY_DIR}/org.telegram.desktop.metainfo.xml")
-    install(TARGETS Telegram RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" BUNDLE DESTINATION "${CMAKE_INSTALL_BINDIR}")
+    configure_file("../lib/xdg/org.telega.desktop.service" "${CMAKE_CURRENT_BINARY_DIR}/org.telegram.desktop.service" @ONLY)
+    configure_file("../lib/xdg/org.telega.desktop.metainfo.xml" "${CMAKE_CURRENT_BINARY_DIR}/org.telegram.desktop.metainfo.xml" @ONLY)
+    generate_appstream_changelog(Telega "${CMAKE_SOURCE_DIR}/changelog.txt" "${CMAKE_CURRENT_BINARY_DIR}/org.telegram.desktop.metainfo.xml")
+    install(TARGETS Telega RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" BUNDLE DESTINATION "${CMAKE_INSTALL_BINDIR}")
     install(FILES "Resources/art/icon16.png" DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/16x16/apps" RENAME "org.telegram.desktop.png")
     install(FILES "Resources/art/icon16@2x.png" DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/16x16@2/apps" RENAME "org.telegram.desktop.png")
     install(FILES "Resources/art/icon32.png" DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/32x32/apps" RENAME "org.telegram.desktop.png")
